@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mouse Click Example - A-Frame</title>
+    <meta content="Mouse Click Example - A-Frame" name="description">
+    <script src="https://aframe.io/releases/0.7.0/aframe.min.js"></script>
+    <!-- add extra scripts for animation -->
+    <script src="//cdn.rawgit.com/donmccurdy/aframe-extras/v5.0.0/dist/aframe-extras.min.js"></script>
+    <script src="https://unpkg.com/aframe-animation-component@^5.1.2/dist/aframe-animation-component.min.js"></script>
+    <!--
+    The event-set component gives you a quick way to add events
+    to elements (like click, mouseenter, mouseleave, mousedown, mouseup, and fusing)
+    without having to write Javascript for each event.
+
+    For exmample if you want to give the user feedback when they hover over the element,
+    you can do event-set__enter="_event: mouseenter; material.color: blue"
+    -->
+    <script src="https://unpkg.com/aframe-event-set-component@^4.0.0/dist/aframe-event-set-component.min.js"></script>
+    <script>
+      AFRAME.registerComponent('navigate-on-click', {
+        schema: {
+          url: {default: ''}
+        },
+
+        init: function () {
+          var data = this.data;
+          var el = this.el;
+
+          el.addEventListener('click', function () {
+            window.location.href = data.url;
+          });
+        }
+      });
+
+    </script>
+</head>
+<body>
+<a-scene>
+    <!--
+         The camera has a cursor component, which uses the mouse as the rayOrigin,
+         so that you can click entities in the scene with the mouse.
+    -->
+    <a-entity camera="userHeight: 1.6" cursor="rayOrigin: mouse" id="camera" look-controls></a-entity>
+    <a-entity position="-10 40 0" text="text: HELLO!; color: #333"></a-entity>
+    <a-entity text="output" value="output"></a-entity>
+    <!-- add sky -->
+    <a-sky src="/static/assets_xr/img/sea.jpg"></a-sky>
+    <!-- add floor -->
+    <a-plane color="#008000" position="0 0 0" rotation="-90 0 0" scale="30 30 30"></a-plane>
+    <!-- add front wall -->
+    <a-plane color="#8dbff2" position="0 1.5 -15" scale="30 3 30" src="/static/assets_xr/img/cif-logo.png"></a-plane>
+    <!-- add right wall -->
+    <a-plane position="15 1.5 0" rotation="0 -90 0" scale="30 3 30"
+             src="/static/assets_xr/img/store_empty.png"></a-plane>
+    <!-- add back wall -->
+    <a-plane position="0 1.5 15" rotation="0 180 0" scale="30 3 30" src="/static/assets_xr/img/school1.jpg"></a-plane>
+    <!-- add left wall -->
+    <a-plane position="-15 1.5 0" rotation="0 90 0" scale="30 3 30" src="/static/assets_xr/img/af2.png"></a-plane>
+
+    <!-- add 3d model -->
+    <a-gltf-model animation="property: position; dur: 2000; loop: true; dir:alternate; to: -16 0.2 -3;" id="boy"
+                  position="-16 0 -3" rotation="0 100 10" scale="0.2 0.2 0.2"
+                  shadow
+                  src="/static/assets_xr/glbs/boy_right.glb"></a-gltf-model>
+    <!-- add navigation on-click event -->
+    <a-box color="#4CC3D9" event-set__enter="_event: mouseenter; color: #026fc9"
+           event-set__leave="_event: mouseleave; color: #4CC3D9"
+           navigate-on-click="url: http://127.0.0.1:5050/test_page8"
+           position="1 0.5 -3"
+           rotation="0 45 0"
+           shadow
+           src="/static/assets_xr/img/af2.png">
+    </a-box>
+    <!-- move an object on click event -->
+    <a-sphere color="#026fc9" event-set__enter="_event: mouseenter; color: #EF2D5E"
+              event-set__leave="_event: mouseleave; color: #026fc9" position="0 1.25 -5"
+              radius="1.25"
+              shadow>
+
+        <!-- This animation begins when the sphere is clicked with the mouse. -->
+        <a-animation attribute="position"
+                     begin="click"
+                     direction="alternate"
+                     dur="1000"
+                     fill="forwards"
+                     to="0 2.5 -6"></a-animation>
+    </a-sphere>
+    <!-- move an object on click event: link to a page use 3d model -->
+    <a-sphere color="#FFC65D" event-set__enter="_event: mouseenter; color: orange" event-set__leave="_event: mouseleave; color: #FFC65D"
+              navigate-on-click="url: http://localhost:5050/"
+              position="-0.2 0.05 -3"
+              radius="0.3" rotation="0 0 90" src="/static/assets_xr/img/turtle.png"></a-sphere>
+
+    <a-entity id="text" position="2.5 10 -18" scale="18 18 18"
+              text="value: Click each object; color: white"></a-entity>
+</a-scene>
+
+</div>
+
+</body>
+</html>
